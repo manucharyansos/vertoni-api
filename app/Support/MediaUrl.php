@@ -10,18 +10,17 @@ class MediaUrl
             return null;
         }
 
-        $path = ltrim((string) $path, '/');
+        $path = trim((string) $path);
 
         if (preg_match('#^https?://#i', $path) || str_starts_with($path, '//')) {
             return $path;
         }
 
-        $baseUrl = rtrim((string) config('filesystems.disks.public.url'), '/');
+        $path = ltrim($path, '/');
+        $path = preg_replace('#^(public/|storage/|uploads/)#', '', $path);
 
-        if ($baseUrl === '') {
-            $baseUrl = rtrim((string) config('app.url'), '/') . '/uploads';
-        }
+        $base = config('filesystems.disks.public.url') ?: rtrim(env('ASSET_URL', env('APP_URL')), '/') . '/uploads';
 
-        return $baseUrl . '/' . $path;
+        return rtrim($base, '/') . '/' . $path;
     }
 }
