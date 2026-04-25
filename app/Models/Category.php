@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\MediaUrl;
+
 use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -121,17 +123,17 @@ class Category extends Model
 
     public function getImageUrlAttribute(): ?string
     {
-        return $this->image ? asset('storage/' . $this->image) : null;
+        return MediaUrl::fromPublicDisk($this->image);
     }
 
     public function getMenuImageUrlAttribute(): ?string
     {
-        return $this->menu_image ? asset('storage/' . $this->menu_image) : null;
+        return MediaUrl::fromPublicDisk($this->menu_image);
     }
 
     public function getHomeImageUrlAttribute(): ?string
     {
-        return $this->home_image ? asset('storage/' . $this->home_image) : null;
+        return MediaUrl::fromPublicDisk($this->home_image);
     }
 
     public function getEffectiveAttributeSchemaAttribute(): array

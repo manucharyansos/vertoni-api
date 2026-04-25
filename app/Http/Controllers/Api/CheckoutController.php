@@ -37,7 +37,7 @@ class CheckoutController extends Controller
                 $variant = null;
                 $price = $product->price;
                 $stock = $product->stock;
-                $image = $product->main_image ? asset('storage/' . $product->main_image) : null;
+                $image = $product->main_image_url;
                 $size = null;
                 $color = null;
 
@@ -49,9 +49,7 @@ class CheckoutController extends Controller
 
                     $price = $variant->price ?? $product->price;
                     $stock = $variant->stock;
-                    $image = $variant->image
-                        ? asset('storage/' . $variant->image)
-                        : ($product->main_image ? asset('storage/' . $product->main_image) : null);
+                    $image = $variant->image_url ?: $product->main_image_url;
 
                     $size = $variant->size;
                     $color = $variant->color;

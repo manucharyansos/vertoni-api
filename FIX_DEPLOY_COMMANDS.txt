@@ -1,0 +1,36 @@
+RUN THESE COMMANDS ON THE BACKEND SERVER AFTER UPLOADING THIS PATCH
+
+cd /home/gpemureqjaea/api.verthoni.com
+
+# Do NOT run: rm -rf storage
+
+mkdir -p storage/app/public/banners
+mkdir -p storage/app/public/homepage/sections
+mkdir -p storage/app/public/homepage/sections/mobile
+mkdir -p storage/app/public/homepage/categories
+mkdir -p storage/app/public/products
+mkdir -p storage/app/livewire-tmp
+mkdir -p storage/framework/cache/data
+mkdir -p storage/framework/sessions
+mkdir -p storage/framework/views
+mkdir -p storage/logs
+mkdir -p bootstrap/cache
+
+chmod -R 775 storage bootstrap/cache
+
+rm -f uploads
+ln -s /home/gpemureqjaea/api.verthoni.com/storage/app/public /home/gpemureqjaea/api.verthoni.com/uploads
+
+php artisan optimize:clear
+php artisan route:clear
+php artisan config:clear
+php artisan cache:clear
+php artisan view:clear
+
+# Required .env values:
+# APP_URL=https://api.verthoni.com
+# ASSET_URL=https://api.verthoni.com
+# FILESYSTEM_DISK=public
+
+# Upload test URL after adding media in admin:
+# https://api.verthoni.com/uploads/banners/your-file.mp4

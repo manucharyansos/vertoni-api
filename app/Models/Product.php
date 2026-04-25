@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\MediaUrl;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -139,7 +141,7 @@ class Product extends Model
 
     public function getMainImageUrlAttribute(): ?string
     {
-        return $this->main_image ? asset('storage/' . $this->main_image) : null;
+        return MediaUrl::fromPublicDisk($this->main_image);
     }
 
     public function getDisplayPriceAttribute(): string|float|int|null
@@ -190,11 +192,11 @@ class Product extends Model
             ->value('image');
 
         if ($firstVariantImage) {
-            return asset('storage/' . $firstVariantImage);
+            return MediaUrl::fromPublicDisk($firstVariantImage);
         }
 
         $firstGalleryImage = $this->images()->whereNotNull('image')->value('image');
 
-        return $firstGalleryImage ? asset('storage/' . $firstGalleryImage) : null;
+        return MediaUrl::fromPublicDisk($firstGalleryImage);
     }
 }

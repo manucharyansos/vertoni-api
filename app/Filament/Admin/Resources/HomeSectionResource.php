@@ -132,7 +132,7 @@ class HomeSectionResource extends Resource
                         ->directory('homepage/sections/video')
                         ->visibility('public')
                         ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/quicktime', 'video/ogg'])
-                        ->maxSize(204800) // 200 MB
+                        ->maxSize(51200) // 50 MB
                         ->nullable(),
                 ])
                 ->columns(3),

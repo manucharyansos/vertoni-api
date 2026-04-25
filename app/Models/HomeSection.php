@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\MediaUrl;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -65,16 +67,16 @@ class HomeSection extends Model
 
     public function getImageUrlAttribute(): ?string
     {
-        return $this->image ? asset('storage/' . $this->image) : null;
+        return MediaUrl::fromPublicDisk($this->image);
     }
 
     public function getMobileImageUrlAttribute(): ?string
     {
-        return $this->mobile_image ? asset('storage/' . $this->mobile_image) : null;
+        return MediaUrl::fromPublicDisk($this->mobile_image);
     }
 
     public function getVideoUrlAttribute(): ?string
     {
-        return $this->video ? asset('storage/' . $this->video) : null;
+        return MediaUrl::fromPublicDisk($this->video);
     }
 }

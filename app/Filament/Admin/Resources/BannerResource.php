@@ -57,12 +57,12 @@ class BannerResource extends Resource
                                 'video/ogg',
                                 'video/quicktime',
                             ])
-                            ->maxSize(204800) // 200 MB
+                            ->maxSize(51200) // 50 MB
                             ->openable()
                             ->downloadable()
                             ->previewable(true)
                             ->nullable()
-                            ->helperText('Կարող եք ներբեռնել նկար կամ կարճ վիդեո, առավելագույնը՝ 200MB'),
+                            ->helperText('Կարող եք ներբեռնել նկար կամ կարճ վիդեո, առավելագույնը՝ 50MB'),
 
                         TextInput::make('button_link')
                             ->label('Կոճակի հղում')

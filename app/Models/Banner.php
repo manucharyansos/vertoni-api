@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\MediaUrl;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Banner extends Model
@@ -53,7 +55,7 @@ class Banner extends Model
 
     public function getMediaUrlAttribute(): ?string
     {
-        return $this->image ? asset('storage/' . $this->image) : null;
+        return MediaUrl::fromPublicDisk($this->image);
     }
 
     public function getMediaTypeAttribute(): string
