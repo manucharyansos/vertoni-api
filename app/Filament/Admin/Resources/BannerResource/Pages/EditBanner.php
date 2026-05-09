@@ -10,10 +10,15 @@ class EditBanner extends EditRecord
 {
     protected static string $resource = BannerResource::class;
 
+    public function getTitle(): string
+    {
+        return 'Խմբագրել բանները';
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()->label('Ջնջել'),
         ];
     }
 }

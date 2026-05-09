@@ -19,7 +19,7 @@ class MediaUrl
         $path = ltrim($path, '/');
         $path = preg_replace('#^(public/|storage/|uploads/)#', '', $path);
 
-        $base = config('filesystems.disks.public.url') ?: rtrim(env('ASSET_URL', env('APP_URL')), '/') . '/uploads';
+        $base = config('filesystems.disks.public.url') ?: rtrim(env('ASSET_URL', env('APP_URL')), '/') . '/storage';
 
         return rtrim($base, '/') . '/' . $path;
     }

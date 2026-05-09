@@ -34,19 +34,19 @@ class HomeSectionResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static ?string $modelLabel = 'Գլխավոր էջի բաժին';
+    protected static ?string $modelLabel = 'Գլխավոր էջի սեկցիա';
 
-    protected static ?string $pluralModelLabel = 'Գլխավոր էջի բաժիններ';
+    protected static ?string $pluralModelLabel = 'Գլխավոր էջի սեկցիաներ';
 
-    protected static ?string $navigationLabel = 'Գլխավոր էջի բաժիններ';
+    protected static ?string $navigationLabel = 'Գլխավոր էջի սեկցիաներ';
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Կարգավորում')
+            Section::make('Սեկցիայի կարգավորումներ')
                 ->schema([
                     TextInput::make('key')
-                        ->label('Ներքին անուն / key')
+                        ->label('Ներքին կոդ / key')
                         ->maxLength(255)
                         ->nullable()
                         ->helperText('Օրինակ՝ equestrian-line կամ custom-leather։'),
@@ -98,13 +98,15 @@ class HomeSectionResource extends Resource
 
                     Toggle::make('is_active')
                         ->label('Ակտիվ է')
-                        ->default(true),
+                        ->default(true)
+                        ->helperText('Միացված է՝ սեկցիան երևում է գլխավոր էջում։ Անջատված է՝ չի երևում կայքում։'),
 
                     TextInput::make('sort_order')
                         ->label('Հերթականություն')
                         ->numeric()
                         ->default(0)
-                        ->required(),
+                        ->required()
+                        ->helperText('Փոքր թիվը երևում է վերևում/առաջինը։ Օրինակ՝ 1, 2, 3։'),
                 ])
                 ->columns(3),
 

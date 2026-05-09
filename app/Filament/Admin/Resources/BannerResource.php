@@ -36,6 +36,14 @@ class BannerResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    protected static ?string $modelLabel = 'Բաններ';
+
+    protected static ?string $pluralModelLabel = 'Բաններներ';
+
+    protected static ?string $navigationLabel = 'Բաններներ';
+
+    protected static ?string $recordTitleAttribute = 'title_hy';
+
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -62,7 +70,7 @@ class BannerResource extends Resource
                             ->downloadable()
                             ->previewable(true)
                             ->nullable()
-                            ->helperText('Կարող եք ներբեռնել նկար կամ կարճ վիդեո, առավելագույնը՝ 50MB'),
+                            ->helperText('Կարող եք ներբեռնել նկար կամ կարճ վիդեո։ Եթե վիդեո է, ցուցակում կերևա որպես վիդեո, իսկ կայքում կբացվի բանների տեղում։ Առավելագույնը՝ 50MB։'),
 
                         TextInput::make('button_link')
                             ->label('Կոճակի հղում')
@@ -71,13 +79,15 @@ class BannerResource extends Resource
 
                         Toggle::make('is_active')
                             ->label('Ակտիվ է')
-                            ->default(true),
+                            ->default(true)
+                            ->helperText('Միացված է՝ բանները երևում է կայքում։ Անջատված է՝ պահվում է ադմինում, բայց կայքում չի երևում։'),
 
                         TextInput::make('sort_order')
-                            ->label('Դասավորություն')
+                            ->label('Հերթականություն')
                             ->numeric()
                             ->default(0)
-                            ->required(),
+                            ->required()
+                            ->helperText('Փոքր թիվը երևում է առաջինը։ Օրինակ՝ 1, 2, 3։'),
                     ])
                     ->columns(2),
 
@@ -115,7 +125,22 @@ class BannerResource extends Resource
                 ImageColumn::make('image')
                     ->label('Նկար')
                     ->disk('public')
-                    ->square(),
+                    ->square()
+                    ->getStateUsing(fn (Banner $record): ?string => $record->media_type === 'image' ? $record->image : null),
+
+                TextColumn::make('media_type')
+                    ->label('Մեդիա')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'image' => 'Նկար',
+                        'video' => 'Վիդեո',
+                        default => 'Չկա',
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'image' => 'success',
+                        'video' => 'warning',
+                        default => 'gray',
+                    }),
 
                 TextColumn::make('title_hy')
                     ->label('Վերնագիր')
@@ -127,7 +152,7 @@ class BannerResource extends Resource
                     ->limit(30),
 
                 TextColumn::make('sort_order')
-                    ->label('Դասավորություն')
+                    ->label('Հերթականություն')
                     ->sortable(),
 
                 IconColumn::make('is_active')
