@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Support\LocalizedProductData;
 
 class ProductResource extends JsonResource
 {
@@ -52,8 +53,8 @@ class ProductResource extends JsonResource
             'show_on_home' => (bool) ($this->show_on_home ?? false),
             'home_sort_order' => (int) ($this->home_sort_order ?? 0),
 
-            'highlights' => $this->highlights ?? [],
-            'specifications' => $this->specifications ?? [],
+            'highlights' => LocalizedProductData::highlights($this->highlights, $locale),
+            'specifications' => LocalizedProductData::specifications($this->specifications, $locale),
 
             'category' => $this->whenLoaded('category', function () use ($locale) {
                 return [

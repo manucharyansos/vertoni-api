@@ -1,8 +1,5 @@
 *.log
 .DS_Store
-.env
-.env.backup
-.env.production
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -22,3 +19,15 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Local environment files: never commit real credentials
+.env
+.env.*
+!.env.example
+!.env.local.example
+!.env.production.example
+/database/*.sqlite
+/storage/framework/views/*.php
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/logs/*

@@ -1,36 +1,42 @@
-RUN THESE COMMANDS ON THE BACKEND SERVER AFTER UPLOADING THIS PATCH
+BACKEND DEPLOY / UPDATE
+=======================
 
 cd /home/gpemureqjaea/api.verthoni.com
 
-# Do NOT run: rm -rf storage
-
-mkdir -p storage/app/public/banners
-mkdir -p storage/app/public/homepage/sections
-mkdir -p storage/app/public/homepage/sections/mobile
-mkdir -p storage/app/public/homepage/categories
-mkdir -p storage/app/public/products
-mkdir -p storage/app/livewire-tmp
-mkdir -p storage/framework/cache/data
-mkdir -p storage/framework/sessions
-mkdir -p storage/framework/views
-mkdir -p storage/logs
-mkdir -p bootstrap/cache
-
-chmod -R 775 storage bootstrap/cache
-
-rm -f uploads
-ln -s /home/gpemureqjaea/api.verthoni.com/storage/app/public /home/gpemureqjaea/api.verthoni.com/uploads
+git pull origin main
+composer install --no-dev --optimize-autoloader
+composer dump-autoload -o
 
 php artisan optimize:clear
-php artisan route:clear
 php artisan config:clear
-php artisan cache:clear
+php artisan route:clear
 php artisan view:clear
+php artisan cache:clear
+php artisan filament:clear-cached-components || true
+php artisan livewire:discover || true
 
-# Required .env values:
-# APP_URL=https://api.verthoni.com
-# ASSET_URL=https://api.verthoni.com
-# FILESYSTEM_DISK=public
+php artisan migrate --force
+php artisan db:seed --class=AdminUserSeeder --force
+php artisan db:seed --class=VertoniCatalogSeeder --force
+php artisan filament:assets
+php artisan storage:link
 
-# Upload test URL after adding media in admin:
-# https://api.verthoni.com/uploads/banners/your-file.mp4
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+chmod -R 775 storage bootstrap/cache
+
+IMPORTANT:
+- Do not commit .env.
+- After Filament/Livewire resource changes, clear browser cache/cookies or hard refresh admin pages.
+- If real products are already managed by the owner, do not run VertoniCatalogSeeder on every deploy.
+
+FRONTEND DEPLOY / UPDATE
+========================
+
+cd /path/to/vertoni-frontend
+
+git pull origin main
+npm ci
+npm run build
+# then restart Nuxt process / PM2 if this is a node-server deployment

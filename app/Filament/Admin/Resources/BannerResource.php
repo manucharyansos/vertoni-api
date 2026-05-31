@@ -126,7 +126,7 @@ class BannerResource extends Resource
                     ->label('Նկար')
                     ->disk('public')
                     ->square()
-                    ->getStateUsing(fn (Banner $record): ?string => $record->media_type === 'image' ? $record->image : null),
+                    ->getStateUsing(fn (Banner $record): ?string => $record->media_type === 'image' ? $record->image_url : null),
 
                 TextColumn::make('media_type')
                     ->label('Մեդիա')

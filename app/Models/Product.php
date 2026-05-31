@@ -74,9 +74,26 @@ class Product extends Model
             }
 
             if (blank($this->{$slugColumn})) {
-                $this->{$slugColumn} = $fallbackSlug;
+                $this->{$slugColumn} = $this->uniqueSlug($fallbackSlug, $slugColumn);
             }
         }
+    }
+
+    protected function uniqueSlug(string $slug, string $column): string
+    {
+        $base = Str::slug($slug) ?: 'product-' . Str::lower(Str::random(8));
+        $candidate = $base;
+        $counter = 2;
+
+        while (static::query()
+            ->where($column, $candidate)
+            ->when($this->exists, fn ($query) => $query->whereKeyNot($this->getKey()))
+            ->exists()) {
+            $candidate = $base . '-' . $counter;
+            $counter++;
+        }
+
+        return $candidate;
     }
     protected $casts = [
         'price' => 'decimal:2',

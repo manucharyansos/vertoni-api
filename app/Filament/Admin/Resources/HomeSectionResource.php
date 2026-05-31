@@ -57,6 +57,7 @@ class HomeSectionResource extends Resource
                             'editorial' => 'Editorial / campaign',
                             'collection' => 'Հավաքածու',
                             'story' => 'Brand story',
+                            'editorial_video' => 'Վիդեո սեկցիա',
                         ])
                         ->default('editorial')
                         ->required(),
@@ -176,7 +177,7 @@ class HomeSectionResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('image')->label('Նկար')->disk('public')->square(),
+                ImageColumn::make('image')->label('Նկար')->getStateUsing(fn (HomeSection $record): ?string => $record->image_url)->square(),
                 TextColumn::make('title_hy')->label('Վերնագիր')->searchable()->sortable(),
                 TextColumn::make('type')->label('Տեսակ')->sortable(),
                 TextColumn::make('sort_order')->label('Հերթ')->sortable(),

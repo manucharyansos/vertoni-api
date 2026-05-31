@@ -11,6 +11,14 @@ class CategoryResource extends JsonResource
     {
         $locale = $request->get('locale', app()->getLocale());
 
+        $menuTitle = $locale === 'hy' && filled($this->menu_title)
+            ? $this->menu_title
+            : $this->getTranslated('name', $locale);
+
+        $menuDescription = $locale === 'hy' && filled($this->menu_description)
+            ? $this->menu_description
+            : $this->getTranslated('description', $locale);
+
         return [
             'id' => $this->id,
             'parent_id' => $this->parent_id,
@@ -21,8 +29,8 @@ class CategoryResource extends JsonResource
             'description' => $this->getTranslated('description', $locale),
 
             'image' => $this->image_url,
-            'menu_title' => $this->menu_title ?: $this->getTranslated('name', $locale),
-            'menu_description' => $this->menu_description ?: $this->getTranslated('description', $locale),
+            'menu_title' => $menuTitle,
+            'menu_description' => $menuDescription,
             'menu_image' => $this->menu_image_url ?: $this->image_url,
 
             'show_on_home' => (bool) ($this->show_on_home ?? false),

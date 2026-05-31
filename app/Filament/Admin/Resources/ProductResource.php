@@ -48,6 +48,7 @@ class ProductResource extends Resource
     {
         return $schema->components([
             Section::make('Հիմնական տվյալներ')
+                ->description('Պարտադիր՝ կատեգորիա, հայերեն անվանում, գին և մնացորդ։ Slug-ը դատարկ թողնելու դեպքում ավտոմատ կստեղծվի։')
                 ->schema([
                     Select::make('category_id')
                         ->label('Կատեգորիա')
@@ -88,8 +89,9 @@ class ProductResource extends Resource
                     TextInput::make('price')
                         ->label('Գին')
                         ->numeric()
-                        ->nullable()
-                        ->helperText('Հիմնական գին այն ապրանքների համար, որոնք տարբերակներ չունեն։'),
+                        ->default(0)
+                        ->required()
+                        ->helperText('Հիմնական գին։ Եթե գինը դեռ հստակ չէ, գրիր 0։'),
 
                     TextInput::make('old_price')
                         ->label('Հին գին')
@@ -100,8 +102,8 @@ class ProductResource extends Resource
                         ->label('Մնացորդ')
                         ->numeric()
                         ->default(0)
-                        ->nullable()
-                        ->helperText('Հիմնական մնացորդ այն ապրանքների համար, որոնք տարբերակներ չունեն։'),
+                        ->required()
+                        ->helperText('Քանակը պահեստում։ Եթե դեռ չկա՝ գրիր 0։'),
 
                     Toggle::make('has_variants')
                         ->label('Ունի տարբերակներ / չափեր')
@@ -114,7 +116,9 @@ class ProductResource extends Resource
                         ->directory('products')
                         ->visibility('public')
                         ->image()
-                        ->nullable(),
+                        ->imageEditor()
+                        ->nullable()
+                        ->helperText('Սա երևում է ապրանքի քարտում և ապրանքի էջում։'),
 
                     Toggle::make('is_active')
                         ->label('Ակտիվ է')
@@ -140,7 +144,7 @@ class ProductResource extends Resource
                     Repeater::make('specifications')
                         ->label('Բնութագրեր')
                         ->schema([
-                            TextInput::make('key')->label('Բանալին')->required()->maxLength(100),
+                            TextInput::make('key')->label('Տեխնիկական անուն')->required()->maxLength(100),
                             TextInput::make('label')->label('Անվանում')->required()->maxLength(255),
                             TextInput::make('value')->label('Արժեք')->required()->maxLength(255),
                         ])
@@ -164,7 +168,7 @@ class ProductResource extends Resource
                     Tab::make('Հայերեն')
                         ->schema([
                             TextInput::make('name_hy')->label('Անվանում')->required()->maxLength(255),
-                            TextInput::make('slug_hy')->label('Slug')->required()->maxLength(255)->unique(ignoreRecord: true),
+                            TextInput::make('slug_hy')->label('Slug')->maxLength(255)->unique(ignoreRecord: true)->nullable()->helperText('Դատարկ թող՝ ավտոմատ կստեղծվի։'),
                             Textarea::make('short_description_hy')->label('Կարճ նկարագրություն')->rows(3),
                             Textarea::make('description_hy')->label('Լրիվ նկարագրություն')->rows(6),
                             TextInput::make('meta_title_hy')->label('Meta title')->maxLength(255),
@@ -174,7 +178,7 @@ class ProductResource extends Resource
                     Tab::make('Ռուսերեն')
                         ->schema([
                             TextInput::make('name_ru')->label('Անվանում')->maxLength(255),
-                            TextInput::make('slug_ru')->label('Slug')->maxLength(255)->unique(ignoreRecord: true),
+                            TextInput::make('slug_ru')->label('Slug')->maxLength(255)->unique(ignoreRecord: true)->nullable()->helperText('Դատարկ թող՝ կօգտագործվի հայերեն slug-ը։'),
                             Textarea::make('short_description_ru')->label('Կարճ նկարագրություն')->rows(3),
                             Textarea::make('description_ru')->label('Լրիվ նկարագրություն')->rows(6),
                             TextInput::make('meta_title_ru')->label('Meta title')->maxLength(255),
@@ -184,7 +188,7 @@ class ProductResource extends Resource
                     Tab::make('Անգլերեն')
                         ->schema([
                             TextInput::make('name_en')->label('Անվանում')->maxLength(255),
-                            TextInput::make('slug_en')->label('Slug')->maxLength(255)->unique(ignoreRecord: true),
+                            TextInput::make('slug_en')->label('Slug')->maxLength(255)->unique(ignoreRecord: true)->nullable()->helperText('Դատարկ թող՝ կօգտագործվի հայերեն slug-ը։'),
                             Textarea::make('short_description_en')->label('Կարճ նկարագրություն')->rows(3),
                             Textarea::make('description_en')->label('Լրիվ նկարագրություն')->rows(6),
                             TextInput::make('meta_title_en')->label('Meta title')->maxLength(255),
@@ -234,7 +238,7 @@ class ProductResource extends Resource
                     Repeater::make('attributes')
                         ->label('Լրացուցիչ հատկանիշներ')
                         ->schema([
-                            TextInput::make('key')->label('Բանալին')->required()->maxLength(100),
+                            TextInput::make('key')->label('Տեխնիկական անուն')->required()->maxLength(100),
                             TextInput::make('label')->label('Անվանում')->required()->maxLength(255),
                             TextInput::make('value')->label('Արժեք')->required()->maxLength(255),
                         ])
@@ -281,7 +285,7 @@ class ProductResource extends Resource
             ->columns([
                 ImageColumn::make('main_image')
                     ->label('Նկար')
-                    ->disk('public')
+                    ->getStateUsing(fn (Product $record): ?string => $record->default_image_url)
                     ->square(),
 
                 TextColumn::make('name_hy')
