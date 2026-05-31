@@ -68,10 +68,10 @@ class ProductDetailResource extends JsonResource
                 })->values();
             }),
 
-            'variants' => $this->whenLoaded('variants', function () {
+            'variants' => $this->whenLoaded('variants', function () use ($locale) {
                 return $this->variants
                     ->sortBy(['sort_order', 'id'])
-                    ->map(function ($variant) {
+                    ->map(function ($variant) use ($locale) {
                         return [
                             'id' => $variant->id,
                             'size' => $variant->size,

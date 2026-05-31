@@ -4,7 +4,6 @@ $defaultAllowedOrigins = [
     'https://verthoni.com',
     'https://www.verthoni.com',
     'https://backend.verthoni.com',
-    'https://api.verthoni.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
 ];
@@ -29,5 +28,5 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials' => filter_var(env('CORS_SUPPORTS_CREDENTIALS', false), FILTER_VALIDATE_BOOL),
 ];

@@ -38,5 +38,6 @@ cd /path/to/vertoni-frontend
 
 git pull origin main
 npm ci
-npm run build
-# then restart Nuxt process / PM2 if this is a node-server deployment
+npm run generate
+# upload .output/public to /home/gpemureqjaea/public_html
+# make sure .htaccess is uploaded too

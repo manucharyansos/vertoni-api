@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Filament\Admin\Resources\AnalyticsEventResource\Pages\ListAnalyticsEvents;
+use App\Filament\Admin\Resources\AnalyticsPageViewResource\Pages\ListAnalyticsPageViews;
+use App\Filament\Admin\Resources\AnalyticsPageViewResource\Widgets\AnalyticsStatsOverview;
+use App\Filament\Admin\Resources\AnalyticsVisitorResource\Pages\ListAnalyticsVisitors;
 use App\Filament\Admin\Resources\BannerResource\Pages\CreateBanner;
 use App\Filament\Admin\Resources\BannerResource\Pages\EditBanner;
 use App\Filament\Admin\Resources\BannerResource\Pages\ListBanners;
@@ -55,6 +59,11 @@ class AppServiceProvider extends ServiceProvider
     private function registerFilamentLivewireAliases(): void
     {
         $aliases = [
+            'app.filament.admin.resources.analytics-event-resource.pages.list-analytics-events' => ListAnalyticsEvents::class,
+            'app.filament.admin.resources.analytics-page-view-resource.pages.list-analytics-page-views' => ListAnalyticsPageViews::class,
+            'app.filament.admin.resources.analytics-page-view-resource.widgets.analytics-stats-overview' => AnalyticsStatsOverview::class,
+            'app.filament.admin.resources.analytics-visitor-resource.pages.list-analytics-visitors' => ListAnalyticsVisitors::class,
+
             'app.filament.admin.resources.banner-resource.pages.list-banners' => ListBanners::class,
             'app.filament.admin.resources.banner-resource.pages.create-banner' => CreateBanner::class,
             'app.filament.admin.resources.banner-resource.pages.edit-banner' => EditBanner::class,

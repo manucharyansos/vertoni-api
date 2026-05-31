@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\CartValidationController;
 use App\Http\Controllers\Api\CategoryController;
@@ -24,6 +25,8 @@ $publicRoutes = function (): void {
     Route::post('/newsletter-subscriptions', [NewsletterSubscriptionController::class, 'store']);
     Route::post('/cart/validate', CartValidationController::class);
     Route::post('/checkout', [CheckoutController::class, 'store']);
+    Route::post('/analytics/page-view', [AnalyticsController::class, 'pageView'])->middleware('throttle:240,1');
+    Route::post('/analytics/event', [AnalyticsController::class, 'event'])->middleware('throttle:240,1');
 };
 
 // Main versioned public API: /api/v1/...
