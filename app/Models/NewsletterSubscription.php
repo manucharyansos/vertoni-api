@@ -12,9 +12,17 @@ class NewsletterSubscription extends Model
         'source',
         'status',
         'subscribed_at',
+        'welcome_sent_at',
     ];
 
     protected $casts = [
         'subscribed_at' => 'datetime',
+        'welcome_sent_at' => 'datetime',
     ];
+
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
 }

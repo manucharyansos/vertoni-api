@@ -96,7 +96,82 @@ class ProductController extends Controller
             })
             ->firstOrFail();
 
+        $product->setRelation('relatedProducts', $this->relatedProductsFor($product));
+
         return new ProductDetailResource($product);
+    }
+
+
+    private function relatedProductsFor(Product $product, int $limit = 8)
+    {
+        $baseQuery = fn () => Product::query()
+            ->with(['category', 'images'])
+            ->where('is_active', true)
+            ->whereKeyNot($product->id);
+
+        $items = collect();
+
+        if ($product->category_id) {
+            $items = $items->merge(
+                $baseQuery()
+                    ->where('category_id', $product->category_id)
+                    ->orderByDesc('is_featured')
+                    ->orderByDesc('id')
+                    ->limit($limit)
+                    ->get()
+            );
+        }
+
+        if ($items->count() < $limit && $product->category) {
+            $categoryIds = $this->collectRelatedCategoryIds($product->category);
+
+            if ($categoryIds) {
+                $items = $items->merge(
+                    $baseQuery()
+                        ->whereIn('category_id', $categoryIds)
+                        ->orderByDesc('is_featured')
+                        ->orderByDesc('id')
+                        ->limit($limit * 2)
+                        ->get()
+                );
+            }
+        }
+
+        if ($items->count() < $limit) {
+            $items = $items->merge(
+                $baseQuery()
+                    ->orderByDesc('is_featured')
+                    ->orderByDesc('id')
+                    ->limit($limit * 2)
+                    ->get()
+            );
+        }
+
+        return $items
+            ->unique('id')
+            ->take($limit)
+            ->values();
+    }
+
+    private function collectRelatedCategoryIds(Category $category): array
+    {
+        $ids = [$category->id];
+
+        if ($category->parent_id) {
+            $ids[] = $category->parent_id;
+
+            $siblingIds = Category::query()
+                ->where('is_active', true)
+                ->where('parent_id', $category->parent_id)
+                ->pluck('id')
+                ->all();
+
+            $ids = array_merge($ids, $siblingIds);
+        } else {
+            $ids = array_merge($ids, $this->collectDescendantCategoryIds($category->id));
+        }
+
+        return array_values(array_unique(array_map('intval', $ids)));
     }
 
     private function collectDescendantCategoryIds(int $categoryId): array

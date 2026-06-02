@@ -136,6 +136,12 @@ class ProductResource extends Resource
                         ->label('Գլխավոր էջի հերթականություն')
                         ->numeric()
                         ->default(0),
+
+                    Toggle::make('notify_subscribers')
+                        ->label('Նոր ապրանքի մասին նամակ ուղարկել բաժանորդներին')
+                        ->default(true)
+                        ->dehydrated(false)
+                        ->helperText('Կուղարկվի միայն ակտիվ ապրանքի ստեղծումից հետո։ Նամակները ուղարկվում են response-ից հետո, որ admin-ի աշխատանքը չդանդաղի։'),
                 ])
                 ->columns(2),
 
@@ -321,6 +327,12 @@ class ProductResource extends Resource
                 IconColumn::make('show_on_home')
                     ->label('Գլխավոր')
                     ->boolean(),
+
+                TextColumn::make('newsletter_sent_at')
+                    ->label('Newsletter')
+                    ->dateTime('Y-m-d H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->label('Ստեղծված է')

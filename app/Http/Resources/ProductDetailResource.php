@@ -88,6 +88,10 @@ class ProductDetailResource extends JsonResource
                     })
                     ->values();
             }),
+
+            'related_products' => $this->whenLoaded('relatedProducts', function () use ($request) {
+                return ProductResource::collection($this->relatedProducts)->resolve($request);
+            }),
         ];
     }
 }

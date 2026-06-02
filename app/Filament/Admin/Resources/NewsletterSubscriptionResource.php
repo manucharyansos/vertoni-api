@@ -59,6 +59,7 @@ class NewsletterSubscriptionResource extends Resource
                 TextColumn::make('source')->label('Աղբյուր')->toggleable()->sortable(),
                 TextColumn::make('status')->label('Կարգավիճակ')->badge()->sortable(),
                 TextColumn::make('subscribed_at')->label('Բաժանորդագրվել է')->dateTime('Y-m-d H:i')->sortable(),
+                TextColumn::make('welcome_sent_at')->label('Welcome նամակ')->dateTime('Y-m-d H:i')->sortable()->toggleable(),
                 TextColumn::make('created_at')->label('Ստեղծված է')->dateTime('Y-m-d H:i')->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

@@ -42,6 +42,7 @@ class Product extends Model
         'is_featured',
         'show_on_home',
         'home_sort_order',
+        'newsletter_sent_at',
     ];
 
 
@@ -103,6 +104,7 @@ class Product extends Model
         'is_featured' => 'boolean',
         'show_on_home' => 'boolean',
         'home_sort_order' => 'integer',
+        'newsletter_sent_at' => 'datetime',
         'has_variants' => 'boolean',
         'specifications' => 'array',
         'highlights' => 'array',
